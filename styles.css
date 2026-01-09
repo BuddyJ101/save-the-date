@@ -26,24 +26,24 @@ html, body {
 
 body {
   display: grid;
-  place-items: center; /* 👈 vertical + horizontal centering */
+  place-items: center;
 }
 
 /* 🔹 SCRATCH CARD CONTAINER */
 .scratch-wrapper {
   position: relative;
-  width: 40vw; /* desktop */
+  width: 40vw;
 }
 
 /* 🔹 MOBILE OVERRIDE */
 @media (max-width: 768px) {
   .scratch-wrapper {
-    width: 90vw; /* mobile */
+    width: 90vw;
   }
 }
 /* 🔹 CANVAS ON TOP */
 canvas {
-  position: relative; /* required for z-index */
+  position: relative;
   width: 100%;
   height: auto;
   display: block;
@@ -58,23 +58,54 @@ canvas {
   z-index: 3;
 }
 
-/* 🔹 MESSAGE UNDERNEATH */
+/* 🔹 MESSAGE UNDERNEATH (FIXED) */
 .message {
   position: absolute;
   inset: 0;
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
   text-align: center;
   pointer-events: none;
   z-index: 1;
 }
 
-.message h1 {
-  font-size: clamp(1.5rem, 4vw, 3rem);
+/* 🔹 REMOVE DEFAULT BROWSER MARGINS */
+.message h1,
+.message p {
   margin: 0;
 }
 
+/* 🔹 TYPOGRAPHY */
+.message h1 {
+  font-size: clamp(1.5rem, 4vw, 3rem);
+}
+
 .message p {
-  margin-top: 0.5rem;
   font-size: clamp(1rem, 2vw, 1.5rem);
+}
+
+/* 🔹 GIF ROW FIX */
+.message .gifs {
+  display: flex;
+  gap: 3rem;
+}
+
+.message .gifs img {
+  display: block;
+  height: 72px;
+  width: auto;
+}
+
+.date-row {
+  display: flex;
+  align-items: center;
+}
+
+.date-row img {
+  height: 56px;
+  width: auto;
+  display: block;
 }/*# sourceMappingURL=styles.css.map */

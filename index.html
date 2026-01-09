@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="icon" type="image/png" href="assets/images/favicon.png">
         <title>Save the Date</title>
 
         <link rel="stylesheet" href="styles.css">
@@ -10,15 +11,26 @@
 
     <body>  
         <div class="scratch-wrapper">
-          <!-- Canvas sits on top -->
           <canvas id="scratch-canvas"></canvas>
-  <canvas id="dust-canvas"></canvas>
+          <canvas id="dust-canvas"></canvas>
 
-          <!-- Content underneath -->
           <div class="message">
             <h1>Save the date!</h1>
-            <p>A new adventure is about to begin 💙</p>
-            <strong>25 July 2026</strong>
+
+            <div class="gifs">
+              <img src="assets/gifs/charmander.gif" />
+              <img src="assets/gifs/heart.gif" />
+              <img src="assets/gifs/squirtle.gif" />
+            </div>
+
+            <p>
+              A new adventure is about to begin 💙
+            </p>
+             <div class="date-row">
+              <img src="assets/gifs/pikachu.gif" alt="Charmander" />
+              <strong>25 July 2026</strong>
+              <img src="assets/gifs/eevee.gif" alt="Eevee" />
+            </div>
           </div>
         </div>
         <script src="script.js"></script>
