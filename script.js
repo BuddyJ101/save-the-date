@@ -25,6 +25,11 @@ const DUST_GRAVITY = 0.15;
 const DUST_LIFETIME = 800;
 const DUST_COLOR = "173, 216, 230";
 
+/* Completion FX */
+const FLASH_DURATION = 180;
+const SPARKLE_COUNT = 26;
+const SPARKLE_LIFETIME = 700;
+
 /* Sound */
 const SCRATCH_SOUND_SRC = "assets/audio/scratch.mp3";
 const SCRATCH_SOUND_VOLUME = 0.25;
@@ -42,13 +47,13 @@ let autoScratchInterval = null;
 /* Dust */
 let dustParticles = [];
 let dustAnimating = false;
+let playingCompletionFX = false;
 
 /* Sound */
 const scratchSound = new Audio(SCRATCH_SOUND_SRC);
 scratchSound.loop = true;
 scratchSound.volume = SCRATCH_SOUND_VOLUME;
 
-// 👇 one-shot sound for auto scratch
 const autoScratchSound = new Audio(SCRATCH_SOUND_SRC);
 autoScratchSound.loop = false;
 autoScratchSound.volume = SCRATCH_SOUND_VOLUME;
@@ -64,12 +69,11 @@ function enableSound() {
   window.removeEventListener("mousedown", enableSound);
   window.removeEventListener("touchstart", enableSound);
 }
-
 window.addEventListener("mousedown", enableSound);
 window.addEventListener("touchstart", enableSound);
 
 /* -----------------------------
-   USER SCRATCH SOUND CONTROL
+   SOUND CONTROL
 ------------------------------ */
 function startScratchSound() {
   if (!soundEnabled || soundPlaying) return;
@@ -85,9 +89,6 @@ function stopScratchSound() {
   scratchSound.currentTime = 0;
 }
 
-/* -----------------------------
-   AUTO SCRATCH SOUND (ONE SHOT)
------------------------------- */
 function playAutoScratchSoundOnce() {
   if (!soundEnabled) return;
   autoScratchSound.currentTime = 0;
@@ -149,10 +150,10 @@ function stopAutoScratch() {
 }
 
 /* -----------------------------
-   DRAW ONE CENTERED RANDOM LINE (AUTO)
+   DRAW AUTO SCRATCH LINE
 ------------------------------ */
 function drawAutoScratchLine() {
-  playAutoScratchSoundOnce(); // 👈 one-shot sound
+  playAutoScratchSoundOnce();
 
   const cx = canvas.width / 2;
   const cy = canvas.height / 2;
@@ -163,16 +164,11 @@ function drawAutoScratchLine() {
   const dx = Math.cos(angle);
   const dy = Math.sin(angle);
 
-  const startX = cx - dx * length;
-  const startY = cy - dy * length;
-  const endX = cx + dx * length;
-  const endY = cy + dy * length;
-
   for (let i = 0; i <= LINE_STEPS; i++) {
     const t = i / LINE_STEPS;
     scratchAt(
-      startX + (endX - startX) * t,
-      startY + (endY - startY) * t
+      cx - dx * length + dx * length * 2 * t,
+      cy - dy * length + dy * length * 2 * t
     );
   }
 
@@ -180,18 +176,17 @@ function drawAutoScratchLine() {
 }
 
 /* -----------------------------
-   SCRATCH AT POINT (shared)
+   SCRATCH AT POINT
 ------------------------------ */
 function scratchAt(x, y) {
   ctx.beginPath();
   ctx.arc(x, y, BRUSH_RADIUS, 0, Math.PI * 2);
   ctx.fill();
-
   spawnDust(x, y);
 }
 
 /* -----------------------------
-   POINTER POSITION FIX
+   USER INPUT
 ------------------------------ */
 function getPointerPos(e) {
   const rect = canvas.getBoundingClientRect();
@@ -207,23 +202,17 @@ function getPointerPos(e) {
   };
 }
 
-/* -----------------------------
-   USER SCRATCH
------------------------------- */
 function scratch(e) {
   if (!isDrawing || isComplete) return;
-
   stopAutoScratch();
   startScratchSound();
-
   const { x, y } = getPointerPos(e);
   scratchAt(x, y);
-
   maybeCheckCompletion();
 }
 
 /* -----------------------------
-   DUST PARTICLES
+   DUST
 ------------------------------ */
 function spawnDust(x, y) {
   for (let i = 0; i < DUST_COUNT; i++) {
@@ -236,7 +225,6 @@ function spawnDust(x, y) {
       size: Math.random() * 3 + 1
     });
   }
-
   if (!dustAnimating) {
     dustAnimating = true;
     requestAnimationFrame(updateDust);
@@ -244,6 +232,8 @@ function spawnDust(x, y) {
 }
 
 function updateDust(time) {
+  if (playingCompletionFX) return;
+
   dustCtx.clearRect(0, 0, dustCanvas.width, dustCanvas.height);
 
   dustParticles = dustParticles.filter(p => {
@@ -255,7 +245,6 @@ function updateDust(time) {
     p.y += p.vy;
 
     const alpha = 1 - age / DUST_LIFETIME;
-
     dustCtx.fillStyle = `rgba(${DUST_COLOR}, ${alpha * 0.4})`;
     dustCtx.beginPath();
     dustCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
@@ -269,15 +258,67 @@ function updateDust(time) {
 }
 
 /* -----------------------------
-   COMPLETION CHECK
+   COMPLETION EFFECT
+------------------------------ */
+function playCompletionEffect() {
+  playingCompletionFX = true;
+
+  const cx = dustCanvas.width / 2;
+  const cy = dustCanvas.height / 2;
+
+  // Flash
+  dustCtx.fillStyle = "rgba(255,255,255,0.85)";
+  dustCtx.fillRect(0, 0, dustCanvas.width, dustCanvas.height);
+
+  setTimeout(() => {
+    dustCtx.clearRect(0, 0, dustCanvas.width, dustCanvas.height);
+  }, FLASH_DURATION);
+
+  // Sparkles
+  const start = performance.now();
+  const sparkles = Array.from({ length: SPARKLE_COUNT }, () => ({
+    angle: Math.random() * Math.PI * 2,
+    speed: Math.random() * 120 + 80,
+    size: Math.random() * 2 + 2
+  }));
+
+  function animate(time) {
+    const elapsed = time - start;
+    const t = elapsed / SPARKLE_LIFETIME;
+
+    dustCtx.clearRect(0, 0, dustCanvas.width, dustCanvas.height);
+
+    sparkles.forEach(s => {
+      const dist = s.speed * (elapsed / 1000);
+      const x = cx + Math.cos(s.angle) * dist;
+      const y = cy + Math.sin(s.angle) * dist;
+
+      dustCtx.fillStyle = `rgba(${DUST_COLOR}, ${1 - t})`;
+      dustCtx.beginPath();
+      dustCtx.arc(x, y, s.size, 0, Math.PI * 2);
+      dustCtx.fill();
+    });
+
+    if (t < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      dustCtx.clearRect(0, 0, dustCanvas.width, dustCanvas.height);
+      playingCompletionFX = false;
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+/* -----------------------------
+   COMPLETION
 ------------------------------ */
 function maybeCheckCompletion() {
   const now = Date.now();
   if (now - lastCheck < CHECK_INTERVAL) return;
   lastCheck = now;
 
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  const pixels = imageData.data;
+  const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
   let transparent = 0;
 
   for (let i = 3; i < pixels.length; i += 4) {
@@ -289,15 +330,13 @@ function maybeCheckCompletion() {
   }
 }
 
-/* -----------------------------
-   COMPLETE STATE
------------------------------- */
 function completeScratch() {
   if (isComplete) return;
 
   isComplete = true;
   stopAutoScratch();
   stopScratchSound();
+  playCompletionEffect();
 
   canvas.style.transition = "opacity 0.8s ease";
   canvas.style.opacity = "0";
@@ -308,7 +347,7 @@ function completeScratch() {
 }
 
 /* -----------------------------
-   MOUSE EVENTS
+   EVENTS
 ------------------------------ */
 canvas.addEventListener("mousedown", () => {
   isDrawing = true;
@@ -328,9 +367,6 @@ canvas.addEventListener("mouseleave", () => {
 
 canvas.addEventListener("mousemove", scratch);
 
-/* -----------------------------
-   TOUCH EVENTS
------------------------------- */
 canvas.addEventListener(
   "touchstart",
   e => {
