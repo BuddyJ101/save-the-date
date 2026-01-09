@@ -4,8 +4,21 @@ const ctx = canvas.getContext("2d");
 const dustCanvas = document.getElementById("dust-canvas");
 const dustCtx = dustCanvas.getContext("2d");
 
+const pokeballImages = [
+  "assets/images/pokeball.png",
+  "assets/images/greatball.png",
+  "assets/images/ultraball.png",
+  "assets/images/masterball.png",
+  "assets/images/healball.png",
+  "assets/images/loveball.png",
+  "assets/images/safariball.png",
+  "assets/images/premierball.png"
+];
+
 const image = new Image();
-image.src = "assets/images/pokeball.png";
+
+const randomIndex = Math.floor(Math.random() * pokeballImages.length);
+image.src = pokeballImages[randomIndex];
 
 /* -----------------------------
    TUNABLE VARIABLES
@@ -13,8 +26,8 @@ image.src = "assets/images/pokeball.png";
 const SCRATCH_THRESHOLD = 0.7;
 const CHECK_INTERVAL = 300;
 
-const AUTO_SCRATCH_START_DELAY = 5000;
-const AUTO_SCRATCH_INTERVAL = 2000;
+const AUTO_SCRATCH_START_DELAY = 8000;
+const AUTO_SCRATCH_INTERVAL = 3000;
 
 const BRUSH_RADIUS = 30;
 const LINE_STEPS = 40;
