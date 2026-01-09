@@ -1,0 +1,83 @@
+:root {
+  --page-bg: #333844;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: "pkmn";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src:
+    url("https://assets.codepen.io/13471/Pokemon-DPPt.woff2") format("woff2"),
+    url("https://assets.codepen.io/13471/pokemon-DPPt.woff") format("woff");
+}
+
+/* 🔹 FULL PAGE CENTERING */
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--page-bg);
+  color: white;
+  font-family: "pkmn", monospace;
+  height: 100%;
+}
+
+body {
+  display: grid;
+  place-items: center; /* 👈 vertical + horizontal centering */
+}
+
+/* 🔹 SCRATCH CARD CONTAINER */
+.scratch-wrapper {
+  position: relative;
+  width: 40vw;        /* desktop */
+}
+
+/* 🔹 MOBILE OVERRIDE */
+@media (max-width: 768px) {
+  .scratch-wrapper {
+    width: 90vw;      /* mobile */
+  }
+}
+
+/* 🔹 CANVAS ON TOP */
+canvas {
+  position: relative; /* required for z-index */
+  width: 100%;
+  height: auto;
+  display: block;
+  cursor: pointer;
+  z-index: 2;
+}
+
+#dust-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* 🔹 MESSAGE UNDERNEATH */
+.message {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.message h1 {
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  margin: 0;
+}
+
+.message p {
+  margin-top: 0.5rem;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+}
