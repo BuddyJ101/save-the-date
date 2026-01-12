@@ -21,6 +21,64 @@ const randomIndex = Math.floor(Math.random() * pokeballImages.length);
 image.src = pokeballImages[randomIndex];
 
 /* -----------------------------
+   POKÉMON GIF + SOUND SYSTEM
+------------------------------ */
+
+const allPokemon = ["pikachu", "eevee"];
+
+const message = document.getElementById("message");
+
+// Hardcoded Pokémon
+const fixedPokemon = [
+  { id: "charmander", name: "charmander" },
+  { id: "squirtle", name: "squirtle" }
+];
+
+// Generated Pokémon slots
+const generatedSlots = [
+  document.getElementById("pokemon1"),
+  document.getElementById("pokemon2")
+];
+
+// Assign sound + src to fixed Pokémon
+fixedPokemon.forEach(p => {
+  const el = document.getElementById(p.id);
+  if (!el) return;
+  el.dataset.sound = `assets/audio/${p.name}.mp3`;
+});
+
+// Pick unique Pokémon for generated slots
+const availablePokemon = allPokemon.filter(
+  p => !fixedPokemon.some(fp => fp.name === p)
+);
+
+function getRandomUniquePokemon(pool) {
+  const index = Math.floor(Math.random() * pool.length);
+  return pool.splice(index, 1)[0];
+}
+
+generatedSlots.forEach(slot => {
+  const chosen = getRandomUniquePokemon(availablePokemon);
+  slot.src = `assets/gifs/${chosen}.gif`;
+  slot.dataset.sound = `assets/audio/${chosen}.mp3`;
+});
+
+/* -----------------------------
+   SHARED SOUND HANDLER (DELEGATED)
+------------------------------ */
+
+message.addEventListener("pointerdown", e => {
+  const target = e.target.closest("img[data-sound]");
+  if (!target) return;
+  if (!soundEnabled) return;
+
+  const audio = new Audio(target.dataset.sound);
+  audio.volume = 0.5;
+  audio.currentTime = 0;
+  audio.play().catch(() => {});
+});
+
+/* -----------------------------
    TUNABLE VARIABLES
 ------------------------------ */
 const SCRATCH_THRESHOLD = 0.7;
@@ -353,6 +411,10 @@ function completeScratch() {
 
   canvas.style.transition = "opacity 0.8s ease";
   canvas.style.opacity = "0";
+
+  const message = document.getElementById("message");
+    message.classList.remove("visible");
+    message.classList.add("reveal");
 
   setTimeout(() => {
     canvas.style.pointerEvents = "none";

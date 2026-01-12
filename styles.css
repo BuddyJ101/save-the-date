@@ -108,6 +108,19 @@ canvas {
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
+.message.reveal {
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+}
+
+.message img[data-sound] {
+  cursor: pointer;
+}
+
+.message img[data-sound]:active {
+  transform: scale(0.95);
+}
+
 .date-row {
   display: flex;
   align-items: center;
