@@ -404,3 +404,30 @@ canvas.addEventListener(
   },
   { passive: false }
 );
+
+document.addEventListener("DOMContentLoaded", () => {
+  const message = document.getElementById("message");
+  let revealed = false;
+
+  function revealMessage() {
+    if (revealed) return;
+    revealed = true;
+
+    message.classList.remove("hidden");
+    message.classList.add("visible");
+
+    document.removeEventListener("click", revealMessage);
+    document.removeEventListener("touchstart", revealMessage);
+    document.removeEventListener("keydown", revealMessage);
+    document.removeEventListener("mousemove", revealMessage);
+  }
+
+  // Reveal after 5 seconds (fallback)
+  setTimeout(revealMessage, 5000);
+
+  // Reveal on first interaction
+  document.addEventListener("click", revealMessage, { once: true });
+  document.addEventListener("touchstart", revealMessage, { once: true });
+  document.addEventListener("keydown", revealMessage, { once: true });
+  document.addEventListener("mousemove", revealMessage, { once: true });
+});
