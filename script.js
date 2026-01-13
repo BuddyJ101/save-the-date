@@ -24,7 +24,24 @@ image.src = pokeballImages[randomIndex];
    POKÉMON GIF + SOUND SYSTEM
 ------------------------------ */
 
-const allPokemon = ["pikachu", "eevee"];
+const allPokemon = ["pikachu", 
+    "eevee",
+    "tauros",
+    "snubbull",
+    "shaymin",
+    "rhydon",
+    "snivy",
+    "manaphy",
+    "tepig",
+    "phanpy",
+    "skiddo",
+    "tirtouga",
+    "pancham",
+    "timburr",
+    "tyranitar",
+    "torkoal",
+    "swinub"
+  ];
 
 const message = document.getElementById("message");
 
@@ -44,7 +61,7 @@ const generatedSlots = [
 fixedPokemon.forEach(p => {
   const el = document.getElementById(p.id);
   if (!el) return;
-  el.dataset.sound = `assets/audio/${p.name}.mp3`;
+  el.dataset.sound = `assets/audio/${p.name}.wav`;
 });
 
 // Pick unique Pokémon for generated slots
@@ -60,7 +77,7 @@ function getRandomUniquePokemon(pool) {
 generatedSlots.forEach(slot => {
   const chosen = getRandomUniquePokemon(availablePokemon);
   slot.src = `assets/gifs/${chosen}.gif`;
-  slot.dataset.sound = `assets/audio/${chosen}.mp3`;
+  slot.dataset.sound = `assets/audio/${chosen}.wav`;
 });
 
 /* -----------------------------
