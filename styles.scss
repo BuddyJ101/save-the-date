@@ -98,8 +98,9 @@ canvas {
 
 .message .gifs img {
   display: block;
-  height: 72px;
   width: auto;
+  height: auto;
+  max-height: 72px;
 }
 
 .message.hidden {
@@ -134,4 +135,35 @@ canvas {
   height: 56px;
   width: auto;
   display: block;
+}
+
+.date-row img.tirtouga {
+  height: auto;
+  width: 100px;
+}
+
+.date-row img.tauros {
+  height: auto;
+  width: auto;
+}
+
+.date-row img.rhydon {
+  height: 72px;
+  width: auto;
+}
+
+.date-row img.tyranitar {
+  height: 72px;
+  width: auto;
+}
+
+@media (max-width: 800px) {
+  .date-row img.rhydon {
+    height: 60px;
+    width: auto;
+  }
+  .date-row img.swinub {
+    height: auto;
+    width: 80px;
+  }
 }

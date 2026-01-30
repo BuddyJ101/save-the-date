@@ -78,6 +78,7 @@ generatedSlots.forEach(slot => {
   const chosen = getRandomUniquePokemon(availablePokemon);
   slot.src = `assets/gifs/${chosen}.gif`;
   slot.dataset.sound = `assets/audio/${chosen}.wav`;
+  slot.classList.add(chosen);
 });
 
 /* -----------------------------
