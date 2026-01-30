@@ -3,36 +3,47 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <link rel="icon" type="image/png" href="assets/images/favicon.png">
         <title>Save the Date</title>
 
         <link rel="stylesheet" href="styles.css">
     </head>
 
     <body>  
-        <div class="scratch-wrapper">
-          <canvas id="scratch-canvas"></canvas>
-          <canvas id="dust-canvas"></canvas>
+        <!-- <h1>Pokéball Sprite Animations</h1> -->
 
-          <div class="message hidden" id="message">
-            <h1>Save the date!</h1>
+        
+        <div class="stage">
+    <div class="pkmn idle">
+      <div class="poke ball rock">
+        <span class="x">
+          <span class="y">
+            <span class="sprite"></span>
+          </span>
+        </span>
+      </div>
 
-            <div class="gifs">
-              <img src="assets/gifs/charmander.gif" id="charmander" data-sound="assets/audio/charmander.mp3"/>
-              <img src="assets/gifs/heart.gif" />
-              <img src="assets/gifs/squirtle.gif" id="squirtle" data-sound="assets/audio/squirtle.mp3"/>
-            </div>
+      <!-- <div class="mon"></div> -->
+      <div class="explode"></div>
+    </div>
 
-            <p>
-              A new adventure is about to begin 💙
-            </p>
-             <div class="date-row">
-              <img src="assets/gifs/pikachu.gif" id="pokemon1" />
-              <strong>25 July 2026</strong>
-              <img src="assets/gifs/eevee.gif" id="pokemon2" />
-            </div>
-          </div>
-        </div>
+    <div class="message">
+      <h1>We’re getting married</h1>
+      <p>25 July 2026</p>
+    </div>
+  </div>
+        
+        <!-- <section class="balls">
+            
+            <div class="poke ball"></div>
+            <div class="poke ball side"></div>
+            <div class="poke ball open"></div>
+            <div class="poke ball roll"></div>
+            <div class="poke ball rock"></div>
+            <div class="poke ball bounce"></div>
+            
+        </section> -->
+        
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <script src="script.js"></script>
 
     </body>
